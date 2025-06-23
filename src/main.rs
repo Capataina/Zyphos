@@ -1,3 +1,8 @@
+mod handler;
+mod router;
+
+use crate::handler::*;
+
 fn main() {
-    println!("Hello, world!");
+    handle_request("GET /hello HTTP/1.1");
 }
