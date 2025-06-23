@@ -1,8 +1,10 @@
 mod handler;
 mod router;
+mod routes;
 
 use crate::handler::*;
 
 fn main() {
-    handle_request("GET /hello HTTP/1.1");
+    let http_answer: String = handle_request("GET /time HTTP/1.1");
+    println!("{}", http_answer);
 }
