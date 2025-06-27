@@ -1,6 +1,9 @@
-use crate::routes::{hello, time};
+use crate::{
+    response::HttpResponse,
+    routes::{hello, time},
+};
 
-pub fn route(http_method: &str, http_path: &str) -> String {
+pub fn route(http_method: &str, http_path: &str) -> HttpResponse {
     if http_method == "GET" {
         if http_path == "/hello" {
             return hello::handle();
@@ -9,5 +12,9 @@ pub fn route(http_method: &str, http_path: &str) -> String {
         }
     }
 
-    "404 Not Found".to_string()
+    HttpResponse {
+        status_code: 404,
+        status_text: "Not Found".to_string(),
+        body: "404 Not Found".to_string(),
+    }
 }
