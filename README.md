@@ -1,6 +1,7 @@
 # MultithreadedHTTP
 
 ## Project Description
+
 **MultithreadedHTTP** is a solo Rust-based project designed to deepen my understanding of low-level internet protocols, with a particular focus on the HTTP/1.x specification. It implements a multithreaded HTTP server from scratch to expose how sockets, request parsing, routing, and thread-pool scheduling actually work. The codebase doubles as a living set of notes and a portfolio artifact showcasing systems-level craftsmanship.
 
 ---
@@ -9,7 +10,7 @@
 
 - [ ] **Protocol-Level: HTTP Specification Features**
   - [ ] Parse HTTP **headers** (content negotiation, cookies, etc.)
-  - [ ] Return proper **HTTP status codes** (`200 OK`, `404`, `500`, …)
+  - [-] Return proper **HTTP status codes** (`200 OK`, `404`, `500`, …)
   - [ ] Support **HTTP/1.0** and **HTTP/1.1** version parsing
   - [ ] Emit **Content-Length** header
   - [ ] Honour **Connection: keep-alive / close** semantics
