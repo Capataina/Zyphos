@@ -8,4 +8,7 @@ use crate::handler::*;
 fn main() {
     let http_answer: String = handle_request("GET /time HTTP/1.1");
     println!("{}", http_answer);
+
+    let broken_http_answer: String = handle_request("brokenone");
+    println!("{}", broken_http_answer);
 }
