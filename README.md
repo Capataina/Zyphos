@@ -10,7 +10,7 @@
 
 - [ ] **Protocol-Level: HTTP Specification Features**
   - [ ] Parse HTTP **headers** (content negotiation, cookies, etc.)
-  - [-] Return proper **HTTP status codes** (`200 OK`, `404`, `500`, …)
+  - [ ] Return proper **HTTP status codes** (`200 OK`, `404`, `500`, …) (in progress)
   - [ ] Support **HTTP/1.0** and **HTTP/1.1** version parsing
   - [ ] Emit **Content-Length** header
   - [ ] Honour **Connection: keep-alive / close** semantics
