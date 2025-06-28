@@ -1,17 +1,14 @@
-use crate::{
-    response::{HttpResponse, format_response},
-    router::route,
-};
+use crate::{create_responses::create_error_response, response::format_response, router::route};
 
 pub fn handle_request(raw_request: &str) -> String {
     let parsed_request: Vec<&str> = raw_request.split(" ").collect();
 
     if parsed_request.len() <= 1 {
-        let bad_request = HttpResponse {
-            status_code: 400,
-            status_text: "Bad Request".to_string(),
-            body: "The request was missing either the method or the path.".to_string(),
-        };
+        let bad_request = create_error_response(
+            400,
+            "Bad Request".to_string(),
+            "The request was missing either the method or the path.".to_string(),
+        );
 
         return format_response(bad_request);
     }

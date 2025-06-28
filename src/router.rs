@@ -1,4 +1,5 @@
 use crate::{
+    create_responses::create_error_response,
     response::HttpResponse,
     routes::{hello, time},
 };
@@ -12,9 +13,9 @@ pub fn route(http_method: &str, http_path: &str) -> HttpResponse {
         }
     }
 
-    HttpResponse {
-        status_code: 404,
-        status_text: "Not Found".to_string(),
-        body: "404 Not Found".to_string(),
-    }
+    create_error_response(
+        404,
+        "Not Found".to_string(),
+        "The entered path doesn't exist.".to_string(),
+    )
 }

@@ -1,9 +1,5 @@
-use crate::response::HttpResponse;
+use crate::{create_responses::create_text_response, response::HttpResponse};
 
 pub fn handle() -> HttpResponse {
-    HttpResponse {
-        status_code: 200,
-        status_text: "OK".to_string(),
-        body: "Hello World!".to_string(),
-    }
+    create_text_response("Hello World!".to_string())
 }
