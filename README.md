@@ -19,15 +19,15 @@
 ### **📡 HTTP Protocol Fundamentals**
 - [ ] **HTTP version validation** - Support HTTP/1.0, HTTP/1.1, reject unsupported versions
 - [ ] **Request line parsing** - Extract method, path, query string, and HTTP version
-- [ ] **HTTP header parsing** - Parse key-value pairs, handle multi-line headers
+- [ ] **HTTP header parsing** - Parse key-value pairs, handle multi-line headers *(in progress)*
 - [ ] **Return proper HTTP status codes** - `200 OK`, `400 Bad Request`, `404 Not Found`, `500 Internal Server Error`, etc. *(in progress)*
-- [ ] **Emit essential headers** - `Content-Length`, `Content-Type`, `Date`, `Server`
-- [ ] **RFC-compliant formatting** - Use proper CRLF (`\r\n`) line endings
+- [x] **Emit essential headers** - `Content-Length`, `Content-Type`, `Date`, `Server` *(in progress)*
+- [x] **RFC-compliant formatting** - Use proper CRLF (`\r\n`) line endings *(in progress)*
 - [ ] **Connection semantics** - Honor `Connection: keep-alive` vs `Connection: close`
 - [ ] **HTTP method validation** - Support GET, POST, PUT, DELETE, reject invalid methods
 
 ### **🔍 Request Processing & Input Validation**
-- [ ] **Malformed request handling** - Gracefully handle broken HTTP without crashes
+- [ ] **Malformed request handling** - Gracefully handle broken HTTP without crashes *(in progress)*
 - [ ] **Request size limits** - Prevent memory exhaustion from huge requests/headers
 - [ ] **Query parameter parsing** - Extract and decode `/search?q=term&filter=type`
 - [ ] **URL decoding** - Handle percent-encoded characters (`%20` → space)
