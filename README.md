@@ -6,25 +6,47 @@
 
 ---
 
+## Technologies & Dependencies
+
+### **🦀 Core Technologies**
+- **Rust 2024 Edition** - Systems programming language for memory safety and performance
+- **Standard Library TCP** - Native socket programming using `std::net::TcpListener` and `std::net::TcpStream`
+- **Standard Library Threading** - Rust's built-in threading primitives for concurrency
+
+### **📦 External Dependencies**
+- **[chrono 0.4](https://docs.rs/chrono/)** - Date and time library for timestamp formatting in responses
+
+### **🏗️ Architecture & Design Patterns**
+- **Modular Design** - Separated concerns across modules: routing, response handling, request parsing
+- **Request-Response Pipeline** - Clear data flow from raw TCP bytes to formatted HTTP responses
+- **Functional Routing** - Simple function-based routing without complex frameworks
+- **Type Safety** - Leveraging Rust's type system for protocol correctness
+
+### **🔧 Development Tools**
+- **Cargo** - Rust's package manager and build system
+- **Git** - Version control with `.gitignore` for build artifacts
+
+---
+
 ## Features & Roadmap
 
 ### **🔧 Core Infrastructure & Foundations**
 - [ ] **TCP Server Implementation** - Bind to address, listen for connections, accept incoming streams
-- [ ] **Raw HTTP parsing** - Split request line, headers, and body from byte stream
-- [ ] **Structured Request/Response types** - Strongly-typed `Request` & `Response` structs
-- [ ] **Basic error handling** - Graceful failures without server crashes
+- [ ] **Raw HTTP parsing** - Split request line, headers, and body from byte stream *(in progress)*
+- [x] **Structured Request/Response types** - Strongly-typed `Request` & `Response` structs *(in progress)*
+- [ ] **Basic error handling** - Graceful failures without server crashes *(in progress)*
 - [ ] **Command-line argument parsing** - Configure host, port, log level via CLI
 - [ ] **Logging infrastructure** - Structured logging with timestamps and levels
 
 ### **📡 HTTP Protocol Fundamentals**
 - [ ] **HTTP version validation** - Support HTTP/1.0, HTTP/1.1, reject unsupported versions
-- [ ] **Request line parsing** - Extract method, path, query string, and HTTP version
+- [ ] **Request line parsing** - Extract method, path, query string, and HTTP version *(in progress)*
 - [ ] **HTTP header parsing** - Parse key-value pairs, handle multi-line headers *(in progress)*
-- [ ] **Return proper HTTP status codes** - `200 OK`, `400 Bad Request`, `404 Not Found`, `500 Internal Server Error`, etc. *(in progress)*
+- [x] **Return proper HTTP status codes** - `200 OK`, `400 Bad Request`, `404 Not Found`, `500 Internal Server Error`, etc. *(in progress)*
 - [x] **Emit essential headers** - `Content-Length`, `Content-Type`, `Date`, `Server` *(in progress)*
 - [x] **RFC-compliant formatting** - Use proper CRLF (`\r\n`) line endings *(in progress)*
 - [ ] **Connection semantics** - Honor `Connection: keep-alive` vs `Connection: close`
-- [ ] **HTTP method validation** - Support GET, POST, PUT, DELETE, reject invalid methods
+- [ ] **HTTP method validation** - Support GET, POST, PUT, DELETE, reject invalid methods *(in progress)*
 
 ### **🔍 Request Processing & Input Validation**
 - [ ] **Malformed request handling** - Gracefully handle broken HTTP without crashes *(in progress)*
@@ -38,10 +60,10 @@
 
 ### **🛣️ Routing & Response Systems**
 - [ ] **Dynamic route parameters** - Handle `/user/:id`, `/posts/:slug/comments/:comment_id`
-- [ ] **Route pattern matching** - Scalable dispatch system with wildcards
+- [ ] **Route pattern matching** - Scalable dispatch system with wildcards *(in progress)*
 - [ ] **Route grouping & prefixes** - Organize routes like `/api/*`, `/admin/*`
-- [ ] **Custom error pages** - Rich 404/500 pages with debug info
-- [ ] **Response builders** - Fluent API for constructing responses
+- [ ] **Custom error pages** - Rich 404/500 pages with debug info *(in progress)*
+- [x] **Response builders** - Fluent API for constructing responses *(in progress)*
 - [ ] **Content negotiation** - Handle `Accept` headers for different response formats
 - [ ] **Redirect responses** - Support 301/302 redirects with proper `Location` headers
 
