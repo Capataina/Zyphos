@@ -1,8 +1,8 @@
-# MultithreadedHTTP
+# Zyphos
 
 ## Project Description
 
-**MultithreadedHTTP** is a solo Rust-based project designed to deepen my understanding of low-level internet protocols, with a particular focus on the HTTP/1.x specification. It implements a multithreaded HTTP server from scratch to expose how sockets, request parsing, routing, and thread-pool scheduling actually work. The codebase doubles as a living set of notes and a portfolio artifact showcasing systems-level craftsmanship.
+**Zyphos** is a solo Rust-based project designed to deepen my understanding of low-level internet protocols, with a particular focus on the HTTP/1.x specification. It implements a multithreaded HTTP server from scratch to expose how sockets, request parsing, routing, and thread-pool scheduling actually work. The codebase doubles as a living set of notes and a portfolio artifact showcasing systems-level craftsmanship.
 
 ---
 
