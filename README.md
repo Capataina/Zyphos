@@ -31,7 +31,7 @@
 ## Features & Roadmap
 
 ### **🔧 Core Infrastructure & Foundations**
-- [ ] **TCP Server Implementation** - Bind to address, listen for connections, accept incoming streams
+- [ ] **TCP Server Implementation** - Bind to address, listen for connections, accept incoming streams *(in progress)*
 - [ ] **Raw HTTP parsing** - Split request line, headers, and body from byte stream *(in progress)*
 - [x] **Structured Request/Response types** - Strongly-typed `Request` & `Response` structs *(in progress)*
 - [ ] **Basic error handling** - Graceful failures without server crashes *(in progress)*
@@ -78,8 +78,8 @@
 - [ ] **CSRF token validation** - Protect against cross-site request forgery
 
 ### **⚡ Concurrency & Performance**
-- [ ] **TCP connection handling** - Accept multiple simultaneous connections
-- [ ] **Thread-per-connection model** - Spawn worker thread for each client
+- [x] **TCP connection handling** - Accept multiple simultaneous connections
+- [x] **Thread-per-connection model** - Spawn worker thread for each client
 - [ ] **Bounded thread pool** - Limit threads to protect OS resources
 - [ ] **Connection pooling** - Reuse threads efficiently
 - [ ] **Request timeout enforcement** - Kill slow/hanging requests
