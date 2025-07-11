@@ -33,7 +33,7 @@ pub fn format_response(response: HttpResponse) -> String {
         }
     }
     format!(
-        "{}{}\r\n{}\r\n\r\n\r\n",
+        "{}{}\r\n{}\r\n\r\n",
         status_line, headers_section, response.body
     )
 }
