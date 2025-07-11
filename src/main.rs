@@ -7,6 +7,7 @@ mod routes;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::panic::{self, AssertUnwindSafe};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::thread;
 
 use crate::handler::*;
@@ -32,6 +33,8 @@ fn handle_connection(mut stream: TcpStream) {
     println!("Response sent successfully.");
 }
 
+static CONNECTION_COUNTER: AtomicUsize = AtomicUsize::new(0);
+
 fn main() {
     let server_address = "localhost:3000";
     let listener = TcpListener::bind(server_address).expect("Failed to bind to address");
@@ -41,8 +44,8 @@ fn main() {
         match stream_result {
             Ok(stream) => {
                 println!("Received stream, spawning thread.");
+                let connection_id = CONNECTION_COUNTER.fetch_add(1, Ordering::SeqCst) + 1;
                 thread::spawn(move || {
-                    let connection_id = 1;
                     println!("[INFO] [Conn#{connection_id}] Starting connection handler.");
 
                     let result = panic::catch_unwind(AssertUnwindSafe(|| {
