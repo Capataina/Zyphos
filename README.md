@@ -1,134 +1,894 @@
 # Zyphos
 
-## Project Description
-
-**Zyphos** is a solo Rust-based project designed to deepen my understanding of low-level internet protocols, with a particular focus on the HTTP/1.x specification. It implements a multithreaded HTTP server from scratch to expose how sockets, request parsing, routing, and thread-pool scheduling actually work. The codebase doubles as a living set of notes and a portfolio artifact showcasing systems-level craftsmanship.
+> A network protocol laboratory built through HTTP server implementation — learning sockets, protocols, and network programming while incorporating performance patterns from compilers, trading systems, and distributed infrastructure where they naturally apply.
 
 ---
 
-## Technologies & Dependencies
+## 🎯 Project Purpose
 
-### **🦀 Core Technologies**
-- **Rust 2024 Edition** - Systems programming language for memory safety and performance
-- **Standard Library TCP** - Native socket programming using `std::net::TcpListener` and `std::net::TcpStream`
-- **Standard Library Threading** - Rust's built-in threading primitives for concurrency
+**Zyphos** is fundamentally about understanding network protocols and systems programming through hands-on HTTP server implementation.
 
-### **📦 External Dependencies**
-- **[chrono 0.4](https://docs.rs/chrono/)** - Date and time library for timestamp formatting in responses
+While the core remains networking, we incorporate relevant techniques from high-performance domains:
 
-### **🏗️ Architecture & Design Patterns**
-- **Modular Design** - Separated concerns across modules: routing, response handling, request parsing
-- **Request-Response Pipeline** - Clear data flow from raw TCP bytes to formatted HTTP responses
-- **Functional Routing** - Simple function-based routing without complex frameworks
-- **Type Safety** - Leveraging Rust's type system for protocol correctness
+- **Network Protocols** — TCP/UDP, HTTP/1.1, HTTP/2, WebSockets, QUIC, multicast
+- **Parser Engineering** — applying compiler techniques to protocol parsing, SIMD optimisation
+- **Concurrency Models** — thread pools, async I/O, lock-free structures from HFT systems  
+- **Memory Management** — arena allocation, zero-copy buffers, GPU-inspired memory pools
+- **Time & Ordering** — NTP, PTP, vector clocks, distributed consensus basics
+- **Performance Engineering** — CPU pinning, NUMA awareness, kernel bypass concepts
+- **Protocol Design** — state machines, schema evolution, backward compatibility
 
-### **🔧 Development Tools**
-- **Cargo** - Rust's package manager and build system
-- **Git** - Version control with `.gitignore` for build artifacts
+Each milestone teaches networking fundamentals while drawing performance and design patterns from production systems in finance, compilers, and distributed infrastructure.
 
 ---
 
-## Features & Roadmap
+## 🔬 What Makes Zyphos Different?
 
-### **🔧 Core Infrastructure & Foundations**
-- [ ] **TCP Server Implementation** - Bind to address, listen for connections, accept incoming streams *(in progress)*
-- [ ] **Raw HTTP parsing** - Split request line, headers, and body from byte stream *(in progress)*
-- [x] **Structured Request/Response types** - Strongly-typed `Request` & `Response` structs *(in progress)*
-- [ ] **Basic error handling** - Graceful failures without server crashes *(in progress)*
-- [ ] **Command-line argument parsing** - Configure host, port, log level via CLI
-- [ ] **Logging infrastructure** - Structured logging with timestamps and levels
+- **Network-first learning** — every concept taught through networking problems
+- **Production patterns** — implement the same techniques used in nginx, HAProxy, and exchange gateways
+- **Deliberate evolution** — build HTTP/1.0 → HTTP/1.1 → HTTP/2 to understand why protocols evolve
+- **Cross-domain techniques** — apply SIMD from compilers to parsing, lock-free from HFT to connection handling
+- **Measurement obsessed** — syscall counts, cache misses, packet rates, latency percentiles
+- **Security through implementation** — understand vulnerabilities by creating them, then fixing them
 
-### **📡 HTTP Protocol Fundamentals**
-- [ ] **HTTP version validation** - Support HTTP/1.0, HTTP/1.1, reject unsupported versions
-- [ ] **Request line parsing** - Extract method, path, query string, and HTTP version *(in progress)*
-- [ ] **HTTP header parsing** - Parse key-value pairs, handle multi-line headers *(in progress)*
-- [x] **Return proper HTTP status codes** - `200 OK`, `400 Bad Request`, `404 Not Found`, `500 Internal Server Error`, etc. *(in progress)*
-- [x] **Emit essential headers** - `Content-Length`, `Content-Type`, `Date`, `Server` *(in progress)*
-- [x] **RFC-compliant formatting** - Use proper CRLF (`\r\n`) line endings *(in progress)*
-- [ ] **Connection semantics** - Honor `Connection: keep-alive` vs `Connection: close`
-- [ ] **HTTP method validation** - Support GET, POST, PUT, DELETE, reject invalid methods *(in progress)*
+---
 
-### **🔍 Request Processing & Input Validation**
-- [ ] **Malformed request handling** - Gracefully handle broken HTTP without crashes *(in progress)*
-- [ ] **Request size limits** - Prevent memory exhaustion from huge requests/headers
-- [ ] **Query parameter parsing** - Extract and decode `/search?q=term&filter=type`
-- [ ] **URL decoding** - Handle percent-encoded characters (`%20` → space)
-- [ ] **Form-encoded POST parsing** - Decode `application/x-www-form-urlencoded`
-- [ ] **JSON request body parsing** - Accept and validate `application/json` payloads
-- [ ] **Request timeout handling** - Don't wait forever for slow clients
-- [ ] **Header size validation** - Prevent header bomb attacks
+## 🏗️ Core Learning Principles
 
-### **🛣️ Routing & Response Systems**
-- [ ] **Dynamic route parameters** - Handle `/user/:id`, `/posts/:slug/comments/:comment_id`
-- [ ] **Route pattern matching** - Scalable dispatch system with wildcards *(in progress)*
-- [ ] **Route grouping & prefixes** - Organize routes like `/api/*`, `/admin/*`
-- [ ] **Custom error pages** - Rich 404/500 pages with debug info *(in progress)*
-- [x] **Response builders** - Fluent API for constructing responses *(in progress)*
-- [ ] **Content negotiation** - Handle `Accept` headers for different response formats
-- [ ] **Redirect responses** - Support 301/302 redirects with proper `Location` headers
+- **Bottom-up networking** — raw sockets → TCP → HTTP → advanced protocols
+- **Empirical understanding** — measure every syscall, every cache miss, every microsecond
+- **Production relevance** — learn patterns used in real load balancers, proxies, and API gateways
+- **Failure-driven learning** — trigger slowloris, SYN floods, request smuggling
+- **Hardware-aware networking** — understand NICs, kernel buffers, zero-copy, DPDK
+- **Protocol archaeology** — implement old versions to understand modern solutions
 
-### **🔒 Security & Attack Prevention**
-- [ ] **Input sanitization** - Prevent injection attacks in headers and body
-- [ ] **Request rate limiting** - Basic DoS protection per IP address
-- [ ] **Path traversal protection** - Prevent `../../../etc/passwd` attacks
-- [ ] **Header injection prevention** - Validate header values for CRLF injection
-- [ ] **Request method restrictions** - Block dangerous methods like TRACE
-- [ ] **Host header validation** - Prevent host header injection attacks
-- [ ] **Basic authentication parsing** - Handle `Authorization: Basic` headers
-- [ ] **CSRF token validation** - Protect against cross-site request forgery
+---
 
-### **⚡ Concurrency & Performance**
-- [x] **TCP connection handling** - Accept multiple simultaneous connections
-- [x] **Thread-per-connection model** - Spawn worker thread for each client
-- [ ] **Bounded thread pool** - Limit threads to protect OS resources
-- [ ] **Connection pooling** - Reuse threads efficiently
-- [ ] **Request timeout enforcement** - Kill slow/hanging requests
-- [ ] **Performance logging** - Track response times, throughput metrics
-- [ ] **Memory usage monitoring** - Track allocation patterns
-- [ ] **Benchmarking tools** - Measure latency/throughput under load
+## 📚 Learning Roadmap
 
-### **🌐 Real-World Protocol Features**
-- [ ] **Static file serving** - Serve HTML, CSS, JS, images with proper MIME types
-- [ ] **HTTPS/TLS support** - SSL/TLS termination with self-signed certificates
-- [ ] **WebSocket upgrade basics** - Handle protocol upgrade requests
-- [ ] **CORS headers** - Cross-origin resource sharing for browser clients
-- [ ] **Cookie parsing & setting** - Handle `Cookie` and `Set-Cookie` headers
-- [ ] **Session management** - Basic stateful user sessions
-- [ ] **File upload handling** - Process `multipart/form-data` requests
-- [ ] **Range requests** - Support partial content (`Range: bytes=0-1023`)
-- [ ] **HTTP caching** - Implement ETag, Last-Modified, Cache-Control
-- [ ] **Response compression** - gzip/deflate encoding
+### Phase 1: Network Foundations
+- [ ] 1) Raw Sockets & System Calls
+- [ ] 2) TCP State Machine & Connection Handling
+- [ ] 3) Thread-per-Connection Model
+- [ ] 4) HTTP/1.0 Parser & Generator
 
-### **🔬 Network Protocol Deep Dive**
-- [ ] **TCP socket options** - Understand SO_REUSEADDR, TCP_NODELAY, keepalive
-- [ ] **Network byte order** - Handle endianness in binary protocols
-- [ ] **IPv4 vs IPv6** - Support both protocol versions
-- [ ] **Proxy protocol support** - Handle X-Forwarded-For headers
-- [ ] **DNS resolution** - Resolve hostnames to IP addresses
-- [ ] **Load balancer awareness** - Health checks, graceful shutdown
+### Phase 2: Concurrency & Performance
+- [ ] 5) Thread Pool Architecture
+- [ ] 6) Memory Pools & Zero-Copy Buffers
+- [ ] 7) HTTP/1.1 & Connection Pooling
+- [ ] 8) Epoll/Kqueue Event Loop
 
-### **🛠️ Development & Operations**
-- [ ] **Configuration system** - TOML/YAML config files and environment variables
-- [ ] **Hot reload** - Restart server on source code changes
-- [ ] **Graceful shutdown** - Handle SIGTERM/SIGINT, finish current requests
-- [ ] **Health check endpoints** - `/health`, `/metrics` for monitoring
-- [ ] **Request/response debugging** - Verbose logging mode for development
-- [ ] **Integration testing** - Test with real HTTP clients (`curl`, browsers)
-- [ ] **Load testing** - Stress test with tools like `wrk` or `ab`
-- [ ] **Docker containerization** - Package server in container
+### Phase 3: Advanced Parsing & Optimisation
+- [ ] 9) SIMD Parser Optimisations
+- [ ] 10) Lock-Free Statistics & Metrics
+- [ ] 11) io_uring & Kernel Bypass Concepts
+- [ ] 12) Request Router & Pattern Matching
 
-### **🛡️ Cybersecurity Learning**
-- [ ] **Security headers** - Implement HSTS, CSP, X-Frame-Options
-- [ ] **Input fuzzing** - Generate malformed requests to find crashes
-- [ ] **TLS certificate validation** - Proper certificate chain verification
-- [ ] **Timing attack awareness** - Consistent response times for auth
-- [ ] **Network monitoring** - Detect unusual traffic patterns
-- [ ] **Vulnerability scanning** - Test against common attack vectors
+### Phase 4: Security & Robustness
+- [ ] 13) Rate Limiting & DDoS Protection
+- [ ] 14) Request Smuggling & Parser Security
+- [ ] 15) TLS/SSL Implementation Basics
+- [ ] 16) Timeouts, Backpressure & Circuit Breakers
 
-### **🎯 Educational Bonus Features**
-- [ ] **Protocol documentation** - Auto-generate API docs from routes
-- [ ] **Traffic analysis tools** - Parse and analyze HTTP logs
-- [ ] **Custom middleware system** - Pluggable request/response processing
-- [ ] **Database integration** - Connect to SQL databases securely
-- [ ] **API versioning** - Handle `/v1/` vs `/v2/` endpoints
-- [ ] **Comprehensive test suite** - Unit, integration, and fuzz testing
+### Phase 5: Modern Protocols
+- [ ] 17) HTTP/2 Frames & Multiplexing
+- [ ] 18) WebSocket Upgrade & Bidirectional Comms
+- [ ] 19) UDP Server & Reliability Layers
+- [ ] 20) QUIC Concepts & Multicast
+
+---
+
+## 📍 Learning Milestones
+
+### 1) Raw Sockets & System Calls
+
+#### Learning Objectives
+- Understand Berkeley sockets API and its evolution
+- Learn the syscall boundary between userspace and kernel
+- Explore file descriptors and their lifecycle
+- Understand blocking vs non-blocking I/O fundamentals
+
+#### Implementation Scope
+- [ ] Create TCP socket using raw socket(), bind(), listen(), accept()
+- [ ] Build echo server reading and writing byte-by-byte
+- [ ] Add proper error handling for all failure cases
+- [ ] Instrument with strace to observe actual syscalls
+
+#### Conceptual Exploration
+- [ ] Measure syscall overhead with different buffer sizes
+- [ ] Test impact of TCP_NODELAY on small messages
+- [ ] Explore SO_REUSEADDR and port exhaustion
+- [ ] Compare send() vs write() vs writev() performance
+
+#### Observability & Measurement
+- [ ] Count syscalls per connection lifecycle
+- [ ] Measure syscall latency distribution
+- [ ] Track file descriptor allocation patterns
+- [ ] Monitor kernel buffer usage via netstat
+
+#### Failure Scenarios
+- [ ] EMFILE (too many open files)
+- [ ] ECONNRESET and EPIPE handling
+- [ ] Partial writes and EINTR
+- [ ] TIME_WAIT state accumulation
+
+#### Exit Criteria
+- [ ] Handle 100 concurrent connections without FD leaks
+- [ ] Measured: syscall cost at 1 byte vs 4KB vs 64KB buffers
+- [ ] Clean shutdown handling all edge cases
+- [ ] Complete syscall trace documented
+
+---
+
+### 2) TCP State Machine & Connection Handling
+
+#### Learning Objectives
+- Understand TCP states and transitions in practice
+- Learn about connection establishment and teardown costs
+- Explore keepalive, linger, and timeout behaviours
+- Understand TCP's reliability mechanisms
+
+#### Implementation Scope
+- [ ] Build connection state tracker with explicit states
+- [ ] Implement graceful shutdown vs abortive close
+- [ ] Add connection timeout detection
+- [ ] Create connection pool with reuse
+
+#### Conceptual Exploration
+- [ ] Measure three-way handshake latency
+- [ ] Test keepalive probe behaviour
+- [ ] Explore TCP_USER_TIMEOUT effects
+- [ ] Profile TIME_WAIT accumulation patterns
+
+#### Observability & Measurement
+- [ ] Connection state distribution
+- [ ] State transition latency
+- [ ] Memory per connection state
+- [ ] Packet capture correlation
+
+#### Failure Scenarios
+- [ ] SYN flood simulation
+- [ ] Half-open connection detection
+- [ ] Connection leak testing
+- [ ] RST attack scenarios
+
+#### Exit Criteria
+- [ ] State machine handles all RFC transitions
+- [ ] No connection leaks under stress
+- [ ] Measured: memory cost per TCP connection
+- [ ] Documented: when to use SO_LINGER
+
+---
+
+### 3) Thread-per-Connection Model
+
+#### Learning Objectives
+- Understand thread creation overhead and limits
+- Learn pthread basics and synchronisation
+- Explore thread safety and data races
+- Understand why this model doesn't scale
+
+#### Implementation Scope
+- [ ] Spawn thread per accepted connection
+- [ ] Add thread-safe logging and statistics
+- [ ] Implement graceful shutdown coordination
+- [ ] Build connection counter with atomics
+
+#### Conceptual Exploration
+- [ ] Measure thread creation/destruction cost
+- [ ] Test maximum sustainable thread count
+- [ ] Profile context switch overhead
+- [ ] Compare mutex vs atomic for stats
+
+#### Observability & Measurement
+- [ ] Thread count and creation rate
+- [ ] Context switches per second
+- [ ] Memory usage (stack + heap)
+- [ ] Lock contention profiling
+
+#### Failure Scenarios
+- [ ] Thread exhaustion limits
+- [ ] Stack overflow testing
+- [ ] Deadlock scenarios
+- [ ] Thundering herd on accept()
+
+#### Exit Criteria
+- [ ] Handle 1000 concurrent connections
+- [ ] Clean shutdown of all threads
+- [ ] Measured: thread creation overhead
+- [ ] Documented: why this doesn't scale
+
+---
+
+### 4) HTTP/1.0 Parser & Generator
+
+#### Learning Objectives
+- Understand HTTP message structure and parsing rules
+- Learn about protocol state machines
+- Explore parser security and edge cases
+- Apply compiler techniques to parsing
+
+#### Implementation Scope
+- [ ] Parse request line and headers
+- [ ] Generate valid HTTP responses
+- [ ] Handle malformed requests safely
+- [ ] Add basic routing logic
+
+#### Conceptual Exploration
+- [ ] Compare recursive descent vs state machine
+- [ ] Measure parsing overhead per byte
+- [ ] Test header injection attacks
+- [ ] Profile branch prediction in parser
+
+#### Observability & Measurement
+- [ ] Parse time per request
+- [ ] Memory allocations during parsing
+- [ ] Branch misprediction rate
+- [ ] Cache misses in parser
+
+#### Failure Scenarios
+- [ ] Malformed request handling
+- [ ] Header size bombs
+- [ ] Parser differential attacks
+- [ ] Integer overflow in Content-Length
+
+#### Exit Criteria
+- [ ] Parse 10K requests/sec single-threaded
+- [ ] Zero crashes on fuzzer input
+- [ ] Measured: parsing cost breakdown
+- [ ] Reject all RFC violations
+
+---
+
+### 5) Thread Pool Architecture
+
+#### Learning Objectives
+- Understand work queue patterns and scheduling
+- Learn about queue contention and false sharing
+- Explore task batching and amortisation
+- Apply HFT-style lock-free techniques
+
+#### Implementation Scope
+- [ ] Build bounded thread pool with work queue
+- [ ] Implement task submission and rejection
+- [ ] Add work-stealing between threads
+- [ ] Create graceful shutdown mechanism
+
+#### Conceptual Exploration
+- [ ] Measure optimal thread count vs cores
+- [ ] Test work-stealing benefits
+- [ ] Profile queue contention
+- [ ] Compare LIFO vs FIFO scheduling
+
+#### Observability & Measurement
+- [ ] Queue depth histogram
+- [ ] Task waiting time distribution
+- [ ] Thread utilisation percentage
+- [ ] Work distribution fairness
+
+#### Failure Scenarios
+- [ ] Queue overflow handling
+- [ ] Worker thread crashes
+- [ ] Priority inversion
+- [ ] Task starvation
+
+#### Exit Criteria
+- [ ] Process 50K tasks/sec sustainably
+- [ ] Fair work distribution achieved
+- [ ] Measured: scheduling overhead
+- [ ] Clean shutdown with pending tasks
+
+---
+
+### 6) Memory Pools & Zero-Copy Buffers
+
+#### Learning Objectives
+- Understand allocation overhead and fragmentation
+- Learn about arena allocation patterns
+- Explore zero-copy techniques and page flipping
+- Apply GPU-style memory pooling concepts
+
+#### Implementation Scope
+- [ ] Build fixed-size memory pool
+- [ ] Implement ring buffer for I/O
+- [ ] Add scatter-gather with iovec
+- [ ] Use sendfile for static content
+
+#### Conceptual Exploration
+- [ ] Measure malloc vs pool allocation
+- [ ] Test cache effects of pooling
+- [ ] Profile TLB misses with huge pages
+- [ ] Compare copy vs zero-copy throughput
+
+#### Observability & Measurement
+- [ ] Allocation latency percentiles
+- [ ] Memory fragmentation ratio
+- [ ] Cache miss rates
+- [ ] Memory bandwidth usage
+
+#### Failure Scenarios
+- [ ] Pool exhaustion scenarios
+- [ ] Use-after-free detection
+- [ ] Memory leak testing
+- [ ] False sharing in pools
+
+#### Exit Criteria
+- [ ] Zero allocations in steady state
+- [ ] 10x faster than malloc for fixed sizes
+- [ ] Measured: CPU cycles per allocation
+- [ ] Documented: when zero-copy matters
+
+---
+
+### 7) HTTP/1.1 & Connection Pooling
+
+#### Learning Objectives
+- Understand persistent connections and pipelining
+- Learn about connection reuse benefits
+- Explore head-of-line blocking issues
+- Understand chunked encoding
+
+#### Implementation Scope
+- [ ] Parse Connection and Keep-Alive headers
+- [ ] Implement request pipelining
+- [ ] Add connection timeout management
+- [ ] Support chunked transfer encoding
+
+#### Conceptual Exploration
+- [ ] Measure connection reuse savings
+- [ ] Test pipelining depth effects
+- [ ] Profile parsing overhead reduction
+- [ ] Compare HTTP/1.0 vs 1.1 efficiency
+
+#### Observability & Measurement
+- [ ] Requests per connection
+- [ ] Connection lifetime distribution
+- [ ] Pipeline stall frequency
+- [ ] Bandwidth utilisation
+
+#### Failure Scenarios
+- [ ] Pipeline desync attacks
+- [ ] Slow request DoS
+- [ ] Connection leak detection
+- [ ] Timeout tuning issues
+
+#### Exit Criteria
+- [ ] 10x reduction in connection overhead
+- [ ] Correct pipelining implementation
+- [ ] Measured: optimal keepalive timeout
+- [ ] No connection leaks under load
+
+---
+
+### 8) Epoll/Kqueue Event Loop
+
+#### Learning Objectives
+- Understand event-driven I/O and reactor pattern
+- Learn about edge vs level triggered modes
+- Explore C10K problem solutions
+- Understand async I/O benefits
+
+#### Implementation Scope
+- [ ] Replace threads with event loop
+- [ ] Implement epoll (Linux) / kqueue (BSD)
+- [ ] Build connection state machines
+- [ ] Add timer wheel for timeouts
+
+#### Conceptual Exploration
+- [ ] Compare thread vs event overhead
+- [ ] Test edge vs level triggered
+- [ ] Measure event batching benefits
+- [ ] Profile syscall reduction
+
+#### Observability & Measurement
+- [ ] Events processed per second
+- [ ] Event loop iteration time
+- [ ] Connection count scalability
+- [ ] CPU usage vs connections
+
+#### Failure Scenarios
+- [ ] Event starvation
+- [ ] Timer wheel overflow
+- [ ] FD limit exhaustion
+- [ ] Spurious wakeups
+
+#### Exit Criteria
+- [ ] Handle 10K concurrent connections
+- [ ] Single core saturation achieved
+- [ ] Measured: events per syscall
+- [ ] Sub-ms latency at 10K connections
+
+---
+
+### 9) SIMD Parser Optimisations
+
+#### Learning Objectives
+- Understand SIMD instructions and vectorisation
+- Learn about data parallelism in parsing
+- Apply compiler optimisation techniques
+- Explore branch-free programming
+
+#### Implementation Scope
+- [ ] Vectorise delimiter searching
+- [ ] SIMD header comparison
+- [ ] Branch-free URI decoding
+- [ ] Implement DFA-based routing
+
+#### Conceptual Exploration
+- [ ] Measure instructions per byte
+- [ ] Test SIMD vs scalar performance
+- [ ] Profile branch prediction
+- [ ] Compare AVX2 vs SSE benefits
+
+#### Observability & Measurement
+- [ ] CPU cycles per request
+- [ ] Branch misprediction rate
+- [ ] Vector instruction usage
+- [ ] Parser throughput
+
+#### Failure Scenarios
+- [ ] Alignment issues
+- [ ] Short input penalties
+- [ ] CPU compatibility
+- [ ] Correctness vs speed
+
+#### Exit Criteria
+- [ ] 5x faster parsing vs naive
+- [ ] 1M requests/sec on single core
+- [ ] Measured: SIMD speedup factors
+- [ ] Branch-free hot path
+
+---
+
+### 10) Lock-Free Statistics & Metrics
+
+#### Learning Objectives
+- Understand lock-free programming principles
+- Learn about atomic operations and memory ordering
+- Explore HFT-style metrics collection
+- Apply RCU and hazard pointer patterns
+
+#### Implementation Scope
+- [ ] Build lock-free counters and gauges
+- [ ] Implement wait-free histograms
+- [ ] Add per-CPU statistics aggregation
+- [ ] Create memory-barrier-free readers
+
+#### Conceptual Exploration
+- [ ] Measure atomic operation costs
+- [ ] Test contention vs throughput
+- [ ] Profile cache coherence traffic
+- [ ] Compare CAS vs fetch-add
+
+#### Observability & Measurement
+- [ ] Metric update latency
+- [ ] Cache line bouncing frequency
+- [ ] Reader vs writer throughput
+- [ ] Memory ordering overhead
+
+#### Failure Scenarios
+- [ ] ABA problem scenarios
+- [ ] Memory ordering bugs
+- [ ] Lost updates
+- [ ] Integer overflow
+
+#### Exit Criteria
+- [ ] 10M updates/sec sustained
+- [ ] Zero reader blocking
+- [ ] Measured: CAS retry rates
+- [ ] ThreadSanitizer clean
+
+---
+
+### 11) io_uring & Kernel Bypass Concepts
+
+#### Learning Objectives
+- Understand kernel bypass benefits and costs
+- Learn about io_uring's ring buffer design
+- Explore zero-syscall I/O operations
+- Understand DPDK/XDP concepts
+
+#### Implementation Scope
+- [ ] Implement basic io_uring integration
+- [ ] Build submission/completion queues
+- [ ] Add batched I/O operations
+- [ ] Compare with epoll performance
+
+#### Conceptual Exploration
+- [ ] Measure syscall elimination benefits
+- [ ] Test SQ poll mode overhead
+- [ ] Profile kernel crossing reduction
+- [ ] Explore fixed buffers vs normal
+
+#### Observability & Measurement
+- [ ] Syscalls per operation
+- [ ] Queue depth and latency
+- [ ] CPU usage in kernel vs user
+- [ ] I/O operation throughput
+
+#### Failure Scenarios
+- [ ] Queue overflow handling
+- [ ] Buffer exhaustion
+- [ ] Completion reordering
+- [ ] Error propagation
+
+#### Exit Criteria
+- [ ] 50% reduction in syscalls
+- [ ] 2x throughput vs epoll
+- [ ] Measured: kernel bypass gains
+- [ ] Documented: when to use io_uring
+
+---
+
+### 12) Request Router & Pattern Matching
+
+#### Learning Objectives
+- Understand routing algorithms and data structures
+- Learn about trie, radix tree, and DFA routing
+- Apply compiler techniques to pattern matching
+- Explore regex engine internals
+
+#### Implementation Scope
+- [ ] Build trie-based router
+- [ ] Add parameter extraction
+- [ ] Implement wildcard patterns
+- [ ] Create regex route support
+
+#### Conceptual Exploration
+- [ ] Compare routing algorithms
+- [ ] Measure lookup performance
+- [ ] Test cache locality effects
+- [ ] Profile pattern compilation
+
+#### Observability & Measurement
+- [ ] Route lookup time
+- [ ] Memory per route
+- [ ] Cache misses during routing
+- [ ] Compilation overhead
+
+#### Failure Scenarios
+- [ ] Route explosion DoS
+- [ ] Catastrophic backtracking
+- [ ] Parameter injection
+- [ ] Route shadowing
+
+#### Exit Criteria
+- [ ] 1M route lookups/sec
+- [ ] O(log n) worst case routing
+- [ ] Measured: trie vs hash performance
+- [ ] Safe regex handling
+
+---
+
+### 13) Rate Limiting & DDoS Protection
+
+#### Learning Objectives
+- Understand rate limiting algorithms
+- Learn about distributed rate limiting
+- Explore probabilistic data structures
+- Apply financial risk management concepts
+
+#### Implementation Scope
+- [ ] Token bucket rate limiter
+- [ ] Sliding window counters
+- [ ] IP-based rate limits
+- [ ] Distributed rate limiting
+
+#### Conceptual Exploration
+- [ ] Compare limiting algorithms
+- [ ] Test memory vs accuracy
+- [ ] Measure false positive rates
+- [ ] Profile overhead impact
+
+#### Observability & Measurement
+- [ ] Limiting accuracy
+- [ ] Memory per tracked entity
+- [ ] Decision latency
+- [ ] False positive/negative rates
+
+#### Failure Scenarios
+- [ ] Distributed coordination
+- [ ] State exhaustion
+- [ ] Clock skew effects
+- [ ] Legitimate traffic blocking
+
+#### Exit Criteria
+- [ ] Accurate limiting at 100K IPs
+- [ ] Sub-microsecond decisions
+- [ ] Measured: algorithm trade-offs
+- [ ] No memory exhaustion
+
+---
+
+### 14) Request Smuggling & Parser Security
+
+#### Learning Objectives
+- Understand protocol ambiguities and security
+- Learn about desync attacks
+- Explore differential testing
+- Apply formal verification concepts
+
+#### Implementation Scope
+- [ ] Build differential parser testing
+- [ ] Implement strict parsing mode
+- [ ] Add smuggling detection
+- [ ] Create security test suite
+
+#### Conceptual Exploration
+- [ ] Fuzzing for discrepancies
+- [ ] Test ambiguous headers
+- [ ] Profile security overhead
+- [ ] Compare parser strategies
+
+#### Observability & Measurement
+- [ ] Parser discrepancy rate
+- [ ] Rejection frequency
+- [ ] Security check overhead
+- [ ] Fuzzing coverage
+
+#### Failure Scenarios
+- [ ] CL-TE desync attacks
+- [ ] Header injection
+- [ ] Integer overflow
+- [ ] Parser confusion
+
+#### Exit Criteria
+- [ ] Zero successful attacks
+- [ ] All CVEs detected
+- [ ] Measured: security vs performance
+- [ ] Fuzzer finds no crashes
+
+---
+
+### 15) TLS/SSL Implementation Basics
+
+#### Learning Objectives
+- Understand TLS handshake protocol
+- Learn about cipher suites and negotiation
+- Explore certificate validation
+- Understand session resumption
+
+#### Implementation Scope
+- [ ] Basic TLS 1.2 handshake
+- [ ] Cipher suite negotiation
+- [ ] Certificate parsing
+- [ ] Session caching
+
+#### Conceptual Exploration
+- [ ] Measure handshake overhead
+- [ ] Test resumption benefits
+- [ ] Profile crypto operations
+- [ ] Compare TLS versions
+
+#### Observability & Measurement
+- [ ] Handshake latency
+- [ ] CPU per handshake
+- [ ] Session cache hit rate
+- [ ] Cipher suite distribution
+
+#### Failure Scenarios
+- [ ] Certificate validation bypass
+- [ ] Downgrade attacks
+- [ ] Renegotiation DoS
+- [ ] Session hijacking
+
+#### Exit Criteria
+- [ ] Working TLS handshake
+- [ ] 1000 handshakes/sec
+- [ ] Measured: crypto overhead
+- [ ] Secure validation chain
+
+---
+
+### 16) Timeouts, Backpressure & Circuit Breakers
+
+#### Learning Objectives
+- Understand timeout hierarchies and cascades
+- Learn about backpressure patterns
+- Explore circuit breaker design
+- Apply distributed systems resilience
+
+#### Implementation Scope
+- [ ] Hierarchical timeout system
+- [ ] Backpressure propagation
+- [ ] Circuit breaker with states
+- [ ] Adaptive timeout tuning
+
+#### Conceptual Exploration
+- [ ] Model timeout cascades
+- [ ] Test backpressure strategies
+- [ ] Measure circuit breaker impact
+- [ ] Profile timeout overhead
+
+#### Observability & Measurement
+- [ ] Timeout trigger rates
+- [ ] Backpressure engagement
+- [ ] Circuit breaker state changes
+- [ ] Recovery time metrics
+
+#### Failure Scenarios
+- [ ] Timeout cascade storms
+- [ ] Backpressure deadlock
+- [ ] Circuit breaker flapping
+- [ ] Slow client attacks
+
+#### Exit Criteria
+- [ ] Stable under overload
+- [ ] No cascade failures
+- [ ] Measured: timeout overhead
+- [ ] Adaptive recovery working
+
+---
+
+### 17) HTTP/2 Frames & Multiplexing
+
+#### Learning Objectives
+- Understand binary framing benefits
+- Learn about stream multiplexing
+- Explore HPACK compression
+- Understand flow control windows
+
+#### Implementation Scope
+- [ ] Frame parser and generator
+- [ ] Stream state machines
+- [ ] HPACK encoder/decoder
+- [ ] Priority and dependency
+
+#### Conceptual Exploration
+- [ ] Measure framing overhead
+- [ ] Test multiplexing benefits
+- [ ] Profile HPACK compression
+- [ ] Compare with HTTP/1.1
+
+#### Observability & Measurement
+- [ ] Frames per second
+- [ ] Stream concurrency
+- [ ] Compression ratios
+- [ ] Flow control stalls
+
+#### Failure Scenarios
+- [ ] Stream ID exhaustion
+- [ ] HPACK bombs
+- [ ] Priority manipulation
+- [ ] Flow control deadlock
+
+#### Exit Criteria
+- [ ] 100 concurrent streams
+- [ ] 30% header compression
+- [ ] Measured: HTTP/2 benefits
+- [ ] No head-of-line blocking
+
+---
+
+### 18) WebSocket Upgrade & Bidirectional Comms
+
+#### Learning Objectives
+- Understand protocol upgrade mechanism
+- Learn about frame masking and opcodes
+- Explore bidirectional patterns
+- Understand WebSocket use cases
+
+#### Implementation Scope
+- [ ] Upgrade handshake handling
+- [ ] Frame encoder/decoder
+- [ ] Ping/pong heartbeats
+- [ ] Message fragmentation
+
+#### Conceptual Exploration
+- [ ] Measure upgrade overhead
+- [ ] Test latency vs HTTP
+- [ ] Profile framing costs
+- [ ] Compare with SSE
+
+#### Observability & Measurement
+- [ ] Messages per second
+- [ ] Frame overhead
+- [ ] Connection longevity
+- [ ] Memory per WebSocket
+
+#### Failure Scenarios
+- [ ] Frame injection
+- [ ] Masking bypass
+- [ ] Connection hijacking
+- [ ] Memory exhaustion
+
+#### Exit Criteria
+- [ ] 10K concurrent WebSockets
+- [ ] 100K messages/sec
+- [ ] Measured: WebSocket overhead
+- [ ] Secure frame handling
+
+---
+
+### 19) UDP Server & Reliability Layers
+
+#### Learning Objectives
+- Understand UDP characteristics and use cases
+- Learn about custom reliability protocols
+- Explore congestion control basics
+- Understand multicast patterns
+
+#### Implementation Scope
+- [ ] UDP echo server
+- [ ] Sequence numbers and ACKs
+- [ ] Simple retransmission
+- [ ] Multicast support
+
+#### Conceptual Exploration
+- [ ] Measure packet loss patterns
+- [ ] Test reliability overhead
+- [ ] Profile UDP vs TCP
+- [ ] Explore broadcast storms
+
+#### Observability & Measurement
+- [ ] Packet loss rates
+- [ ] Retransmission frequency
+- [ ] RTT estimation accuracy
+- [ ] Throughput vs reliability
+
+#### Failure Scenarios
+- [ ] Packet loss storms
+- [ ] Amplification attacks
+- [ ] Congestion collapse
+- [ ] NAT traversal
+
+#### Exit Criteria
+- [ ] Reliable delivery over loss
+- [ ] Basic congestion control
+- [ ] Measured: UDP vs TCP trade-offs
+- [ ] Multicast working
+
+---
+
+### 20) QUIC Concepts & Multicast
+
+#### Learning Objectives
+- Understand QUIC's improvements over TCP+TLS
+- Learn about 0-RTT connections
+- Explore reliable multicast protocols
+- Understand connection migration
+
+#### Implementation Scope
+- [ ] QUIC handshake basics
+- [ ] Stream multiplexing over UDP
+- [ ] Connection migration handling
+- [ ] PGM/multicast implementation
+
+#### Conceptual Exploration
+- [ ] Measure 0-RTT benefits
+- [ ] Test migration seamlessness
+- [ ] Profile QUIC overhead
+- [ ] Compare multicast efficiency
+
+#### Observability & Measurement
+- [ ] Handshake latency savings
+- [ ] Migration success rate
+- [ ] Packet overhead
+- [ ] Multicast fanout
+
+#### Failure Scenarios
+- [ ] 0-RTT replay attacks
+- [ ] Migration hijacking
+- [ ] Multicast storms
+- [ ] Version negotiation
+
+#### Exit Criteria
+- [ ] Basic QUIC working
+- [ ] 50% handshake reduction
+- [ ] Measured: QUIC vs HTTP/2
+- [ ] Multicast to 100 clients
+
+---
+
+## 🎓 Learning Outcomes
+
+1. **Network Programming Fundamentals** — from sockets to modern protocols
+2. **Performance Engineering** — where latency comes from and how to eliminate it
+3. **Concurrency Models** — threads vs events vs coroutines, and when each wins
+4. **Parser Engineering** — applying compiler techniques to protocol parsing
+5. **Memory Management** — allocation strategies, zero-copy techniques, cache effects
+6. **Security Engineering** — how protocols fail and how to defend them
+7. **Production Patterns** — the techniques used in nginx, HAProxy, and exchange gateways
+8. **Hardware Awareness** — CPU caches, NUMA, kernel bypass, SIMD
+9. **Distributed Systems Basics** — consensus, time, ordering, consistency
+10. **Protocol Evolution** — why HTTP/2 exists, what QUIC solves, where protocols are heading
