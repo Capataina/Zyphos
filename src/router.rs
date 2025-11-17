@@ -1,7 +1,7 @@
 use crate::{
     create_responses::create_error_response,
     response::HttpResponse,
-    routes::{hello, time},
+    routes::{echo, hello, time},
 };
 
 pub fn route(http_method: &str, http_path: &str) -> HttpResponse {
@@ -10,6 +10,10 @@ pub fn route(http_method: &str, http_path: &str) -> HttpResponse {
             return hello::handle();
         } else if http_path == "/time" {
             return time::handle();
+        }
+
+        if let Some(text) = http_path.strip_prefix("/echo/") {
+            return echo::handle(text);
         }
     }
 
